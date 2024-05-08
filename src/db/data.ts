@@ -1170,7 +1170,7 @@ export const data = {
       release_date: "2019-05-25T07:00:00.000Z",
       release_date_unix: 1558767600,
       release_year: 2019,
-      retail_price_cents: null,
+      retail_price_cents: 17500,
       shoe_condition: "new_no_defects",
       silhouette: "Air Jordan 1",
       size_range: [
