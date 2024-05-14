@@ -101,7 +101,7 @@ export const Home = () => {
                   className="flex flex-col relative hover:scale-105 duration-150 justify-center py-8 bg-[#f2f2f2] text-center"
                   key={product.id}
                 >
-                  <Link to={`/product/${product.id}`}>
+                  <Link to={`/products/${product.id}`}>
                     <img
                       src={product.grid_picture_url}
                       alt=""

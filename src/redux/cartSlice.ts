@@ -1,49 +1,70 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type Product = {
-  box_condition: string;
+// type Product = {
+//   box_condition: string;
+//   brand_name: string;
+//   category: string[];
+//   collection_slugs: string[];
+//   color: string;
+//   designer: string;
+//   details: string | null;
+//   gender: string[];
+//   grid_picture_url: string;
+//   has_picture: boolean;
+//   has_stock: boolean;
+//   id: number;
+//   keywords: string[];
+//   main_picture_url: string;
+//   midsole: string | null;
+//   name: string;
+//   nickname: string;
+//   original_picture_url: string;
+//   product_template_id: number;
+//   release_date: string | null;
+//   release_date_unix: number | null;
+//   release_year: number | null;
+//   retail_price_cents: number | 0;
+//   shoe_condition: string;
+//   silhouette: string;
+//   size_range: number[];
+//   sku: string;
+//   slug: string;
+//   status: string;
+//   story_html: string | null;
+//   upper_material: string | null;
+//   quantity?: number;
+//   totalPrice?: number;
+// };
+
+interface Product {
   brand_name: string;
   category: string[];
-  collection_slugs: string[];
-  color: string;
   designer: string;
-  details: string | null;
   gender: string[];
   grid_picture_url: string;
-  has_picture: boolean;
-  has_stock: boolean;
   id: number;
   keywords: string[];
   main_picture_url: string;
-  midsole: string | null;
+  midsole: string;
   name: string;
   nickname: string;
   original_picture_url: string;
-  product_template_id: number;
-  release_date: string | null;
-  release_date_unix: number | null;
-  release_year: number | null;
-  retail_price_cents: number | 0;
-  shoe_condition: string;
-  silhouette: string;
+  retail_price_cents: number;
   size_range: number[];
-  sku: string;
-  slug: string;
-  status: string;
-  story_html: string | null;
-  upper_material: string | null;
-  quantity?: number;
-  totalPrice?: number;
-};
+  story_html?: string;
+  quantity: number;
+  totalPrice: number;
+  selectedSize: number;
+}
 
 interface cartState {
-  cart: Product[];
+  cartProducts: Product[];
   totalAmount: number;
   totalItems: number;
 }
 
 const initialState: cartState = {
-  cart: [],
+  cartProducts: [],
   totalItems: 0,
   totalAmount: 0,
 };
@@ -53,45 +74,63 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart(state, action: PayloadAction<Product>) {
-      const productInCart = state.cart.find(
+      const productInCart = state.cartProducts.find(
         (product) => product.id === action.payload.id
       );
       if (productInCart) {
-        const tempCart = state.cart.map((product) => {
+        const tempCart = state.cartProducts.map((product) => {
           if (product.id === action.payload.id) {
-            const tempQty: number = product.quantity + action.payload.quantity;
+            const tempQty: number = !product.quantity
+              ? 1
+              : product.quantity + action.payload.quantity;
             const tempTotalPrice: number =
               product.quantity * (product.retail_price_cents / 100);
+            if (product.selectedSize !== action.payload.selectedSize) {
+              return {
+                ...product,
+                selectedSize: action.payload.selectedSize,
+              };
+            }
 
             return {
               ...product,
               quantity: tempQty,
               totalPrice: tempTotalPrice,
             };
+          } else {
+            return product;
           }
         });
-        state.cart = tempCart;
+        state.cartProducts = tempCart;
+      }
+      if (!action.payload.quantity) {
+        action.payload.quantity = 1;
+      }
+      if (!action.payload.totalPrice) {
+        action.payload.totalPrice = action.payload.retail_price_cents / 100;
       }
 
-      state.cart.push(action.payload);
+      state.cartProducts.push(action.payload);
     },
     removeFromCart(state, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
-      const tempCart = state.cart.filter((product) => product.id !== id);
-      state.cart = tempCart;
+      const tempCart = state.cartProducts.filter(
+        (product) => product.id !== id
+      );
+      state.cartProducts = tempCart;
     },
     clearCart(state) {
-      state.cart = [];
+      state.cartProducts = [];
     },
     getTotal(state) {
-      state.totalAmount = state.cart.reduce((cartTotal, cartItem) => {
+      state.totalAmount = state.cartProducts?.reduce((cartTotal, cartItem) => {
         return (cartTotal += cartItem.totalPrice);
       }, 0);
-      state.totalItems = state.cart.length;
+      state.totalItems = state.cartProducts.length;
     },
     increaseQuantity(state, action) {
       const { id } = action.payload;
-      state.cart = state.cart.map((product) => {
+      state.cartProducts = state.cartProducts.map((product) => {
         if (product.id === id) {
           return {
             ...product,
@@ -105,7 +144,7 @@ const cartSlice = createSlice({
     },
     decreaseQuantity(state, action) {
       const { id } = action.payload;
-      state.cart = state.cart.map((product) => {
+      state.cartProducts = state.cartProducts.map((product) => {
         if (product.id === id) {
           return {
             ...product,
@@ -128,4 +167,5 @@ export const {
   getTotal,
   increaseQuantity,
 } = cartSlice.actions;
+export const cart = (state) => state.cart;
 export default cartSlice.reducer;

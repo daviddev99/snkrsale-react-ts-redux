@@ -5,6 +5,8 @@ import React from "react";
 import { data } from "../db/data";
 import { sortOptions } from "../consts.ts";
 import { Filters } from "../components/Filters.tsx";
+import { Skeleton } from "../components/Skeleton.tsx";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function ProductsPage() {
   interface Product {
@@ -23,6 +25,9 @@ export default function ProductsPage() {
     retail_price_cents: number;
     size_range: number[];
     story_html?: string;
+    quantity: number;
+    totalPrice: number;
+    selectedSize: number;
   }
   const [filteredAndSortedProducts, setFilteredAndSortedProducts] = useState<
     Product[]
@@ -41,7 +46,7 @@ export default function ProductsPage() {
   const products = data.sneakers;
 
   useEffect(() => {
-    let filteredProducts =  [...products];
+    let filteredProducts = [...products];
 
     if (selectedBrand || selectedCategory || selectedGender) {
       searchParams.delete("page");
@@ -98,10 +103,10 @@ export default function ProductsPage() {
         break;
     }
 
-    setTimeout(()=> {
+    setTimeout(() => {
       setIsLoading(false);
-      setFilteredAndSortedProducts(filteredProducts)
-    },500);
+      setFilteredAndSortedProducts(filteredProducts);
+    }, 500);
     setIsLoading(true);
   }, [
     products,
@@ -113,18 +118,25 @@ export default function ProductsPage() {
     selectedSort,
   ]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleSearchChange = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
 
     if (text.length === 0) {
-      searchParams.delete("page");
       searchParams.delete("query");
-      setSearchParams(searchParams, { replace: true });
+      setSearchParams(searchParams, {
+        replace: true,
+      });
     } else {
+      searchParams.delete("sort");
+      searchParams.delete("category");
+      searchParams.delete("brand");
+      searchParams.delete("gender");
       searchParams.set("query", text);
-      setSearchParams(searchParams, { replace: true });
+      setSearchParams(searchParams, {
+        replace: true,
+      });
     }
-  };
+  }, 500);
 
   return (
     <section className="w-full bg-white">
@@ -144,7 +156,6 @@ export default function ProductsPage() {
                   type="text"
                   className="outline-none"
                   onChange={handleSearchChange}
-                  value={query || ""}
                 />
                 <FaSearch />
               </div>
@@ -179,9 +190,7 @@ export default function ProductsPage() {
           <Filters />
 
           {isLoading ? (
-            <div className="w-screen sm:w-[50vw] text-center bg-[#f2f2f2] p-2 md:gap-3 md:p-3">
-              Loading...
-            </div>
+            <Skeleton />
           ) : filteredAndSortedProducts.length === 0 ? (
             <div className="w-full sm:w-[50vw] flex items-center px-6 py-12 mx-auto">
               <div className="flex flex-col items-center max-w-sm mx-auto text-center">
@@ -251,7 +260,7 @@ export default function ProductsPage() {
                       key={product.id}
                       className="max-w-sm w-full bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 duration-150"
                     >
-                      <Link to={`/product/${product.id}`}>
+                      <Link to={`/products/${product.id}`}>
                         <img
                           className=" w-64 mx-auto hover:-rotate-12 duration-150"
                           src={product?.grid_picture_url}
