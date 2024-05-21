@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { filters } from "../consts";
 
 export const Filters = () => {
@@ -8,7 +8,7 @@ export const Filters = () => {
   const selectedGender = searchParams.get("gender");
   return (
     <div className="w-[25vw]  md:flex-col hidden md:flex">
-      <div className="max-w-md bg-white min-h-sceen">
+      <div className="max-w-md bg-white min-h-screen">
         <div className="grid divide-y divide-neutral-200 max-w-xl pr-4">
           <div className="py-5 w-full">
             <details className="group">
@@ -160,6 +160,7 @@ export const Filters = () => {
               </div>
             </details>
           </div>
+        <Link to={"/products"} className="w-full bg-black text-white  p-4 text-center">Clear filters</Link>
         </div>
       </div>
     </div>

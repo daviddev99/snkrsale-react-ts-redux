@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 
 import { Link } from "react-router-dom";
 import { data } from "../db/data.js";
@@ -16,17 +15,11 @@ export const Home = () => {
   const products = data.sneakers;
 
   interface Product {
-    box_condition: string;
     brand_name: string;
     category: string[];
-    collection_slugs: string[];
-    color: string;
     designer: string;
-    details: string;
     gender: string[];
     grid_picture_url: string;
-    has_picture: boolean;
-    has_stock: boolean;
     id: number;
     keywords: string[];
     main_picture_url: string;
@@ -34,25 +27,18 @@ export const Home = () => {
     name: string;
     nickname: string;
     original_picture_url: string;
-    product_template_id: number;
-    release_date: string;
-    release_date_unix: number;
-    release_year: number;
     retail_price_cents: number;
-    shoe_condition: string;
-    silhouette: string;
     size_range: number[];
-    sku: string;
-    slug: string;
-    status: string;
-    story_html: string;
-    upper_material: string | null;
+    story_html?: string;
+    quantity?: number;
+    totalPrice?: number;
+    selectedSize?: number;
   }
 
   const tempProducts: Product[] = [];
 
   if (products.length > 0) {
-    for (let i in products) {
+    for (const i in products) {
       let randomIndex = Math.floor(Math.random() * products.length);
       while (tempProducts.includes(products[randomIndex])) {
         randomIndex = Math.floor(Math.random() * products.length);
@@ -94,14 +80,14 @@ export const Home = () => {
           <h3 className=" border-t-2 border-black p-2 text-2xl mb-10 font-bold">
             FEATURED
           </h3>
-          <div className="flex  w-full flex-col justify-around md:flex-row">
+          <div className=" featured-products md:w-fit lg:w-full ">
             {tempProducts.slice(0, 3).map((product) => {
               return (
                 <div
-                  className="flex flex-col relative hover:scale-105 duration-150 justify-center py-8 bg-[#f2f2f2] text-center"
+                  className="flex max-w-md flex-col relative hover:scale-105 duration-150 justify-center py-8 bg-[#f2f2f2] text-center"
                   key={product.id}
                 >
-                  <Link to={`/products/${product.id}`}>
+                  <Link to={`/products/${product.id}`} className="mx-auto">
                     <img
                       src={product.grid_picture_url}
                       alt=""
@@ -120,7 +106,7 @@ export const Home = () => {
                       ${product.retail_price_cents / 100}
                     </p>
                     <Link
-                      to={`/product/${product.id}`}
+                      to={`/products/${product.id}`}
                       className="hover:font-bold duration-150"
                     >
                       Show product

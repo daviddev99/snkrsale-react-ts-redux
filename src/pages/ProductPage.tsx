@@ -2,6 +2,7 @@ import { data } from "../db/data";
 import { useParams, useSearchParams } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
 import { useDispatch } from "react-redux";
+import { toast} from 'sonner'
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -35,23 +36,24 @@ export default function ProductPage() {
 
   const addToCartHandler = (product: Product) => {
     if (!selectedSize) {
-      console.error("You dont have selected any size!");
+      toast.error("You dont have selected any size!");
       return;
     } else {
       dispatch(
         addToCart({
           ...product,
           selectedSize: selectedSize,
+          quantity: 1,
+          totalPrice: (product.retail_price_cents / 100)
         }),
-        console.log(product)
       );
+      toast.success('Product added to cart')
     }
   };
 
-  console.log(product);
   return (
     <section className="w-full  my-6">
-      <div className="w-[90%] container max-w-7xl mx-auto">
+      <div className="w-[75%] container max-w-7xl mx-auto">
         <div className="md:flex md:items-center">
           <div className="w-full h-64 md:w-1/2 lg:h-96">
             <img
@@ -119,7 +121,6 @@ export default function ProductPage() {
               </button>
             </div>
           </div>
-          {/* <Toaster position="top-center" /> */}
         </div>
       </div>
     </section>
