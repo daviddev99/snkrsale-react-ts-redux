@@ -15,25 +15,22 @@ import { toast } from "sonner";
 import { NoProducts } from "../components/NoProducts";
 
 export default function CartPage() {
-  interface Product {
+  type Product = {
     brand_name: string;
     category: string[];
     designer: string;
     gender: string[];
     grid_picture_url: string;
     id: number;
-    keywords: string[];
     main_picture_url: string;
-    midsole: string;
     name: string;
-    nickname: string;
     original_picture_url: string;
     retail_price_cents: number;
     size_range: number[];
-    story_html?: string;
-    quantity?: number;
-    totalPrice?: number;
+    story_html: string;
     selectedSize?: number;
+    totalPrice?: number;
+    quantity?: number;
   }
   const dispatch = useDispatch();
   const { cartProducts, totalAmount, totalItems } = useSelector(cart);

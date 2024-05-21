@@ -19,18 +19,15 @@ export default function ProductsPage() {
     gender: string[];
     grid_picture_url: string;
     id: number;
-    keywords: string[];
     main_picture_url: string;
-    midsole: string;
     name: string;
-    nickname: string;
     original_picture_url: string;
     retail_price_cents: number;
     size_range: number[];
-    story_html?: string;
-    quantity: number;
-    totalPrice: number;
-    selectedSize: number;
+    story_html: string;
+    selectedSize?: number;
+    totalPrice?: number;
+    quantity?: number;
   }
   const [filteredAndSortedProducts, setFilteredAndSortedProducts] = useState<
     Product[]
@@ -80,19 +77,19 @@ export default function ProductsPage() {
         (product) =>
           product.brand_name.toLowerCase().includes(query.toLowerCase()) ||
           product.name.toLowerCase().includes(query.toLowerCase()) ||
-          product.designer.toLowerCase().includes(query.toLowerCase())
+          product.designer!.toLowerCase().includes(query.toLowerCase())
       );
     }
 
     switch (selectedSort) {
       case "Price: Low to High":
         filteredProducts = filteredProducts.sort(
-          (a, b) => a.retail_price_cents - b.retail_price_cents
+          (a, b) => a.retail_price_cents! - b.retail_price_cents!
         );
         break;
       case "Price: High to Low":
         filteredProducts = filteredProducts.sort(
-          (a, b) => b.retail_price_cents - a.retail_price_cents
+          (a, b) => b.retail_price_cents! - a.retail_price_cents!
         );
         break;
 
@@ -104,7 +101,7 @@ export default function ProductsPage() {
     setTimeout(() => {
       setIsLoading(false);
       setFilteredAndSortedProducts(
-        filteredProducts.slice(0, selectedPage * productsToShow)
+        filteredProducts.slice(0, (selectedPage * productsToShow))
       );
     }, 500);
     setIsLoading(true);

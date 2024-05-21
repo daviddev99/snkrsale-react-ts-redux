@@ -2,7 +2,7 @@ import { data } from "../db/data";
 import { useParams, useSearchParams } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
 import { useDispatch } from "react-redux";
-import { toast} from 'sonner'
+import { toast } from "sonner";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -16,25 +16,24 @@ export default function ProductPage() {
     gender: string[];
     grid_picture_url: string;
     id: number;
-    keywords: string[];
     main_picture_url: string;
-    midsole: string;
     name: string;
-    nickname: string;
     original_picture_url: string;
     retail_price_cents: number;
     size_range: number[];
-    story_html?: string;
-    quantity: number;
-    totalPrice: number;
-    selectedSize: number;
+    story_html: string;
+    selectedSize?: number;
+    totalPrice?: number;
+    quantity?: number;
   }
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedSize = Number(searchParams.get("size"));
 
-  const addToCartHandler = (product: Product) => {
+  const addToCartHandler = (
+    product: Product | undefined
+  ) => {
     if (!selectedSize) {
       toast.error("You dont have selected any size!");
       return;
@@ -44,10 +43,10 @@ export default function ProductPage() {
           ...product,
           selectedSize: selectedSize,
           quantity: 1,
-          totalPrice: (product.retail_price_cents / 100)
-        }),
+          totalPrice: product!.retail_price_cents! / 100,
+        })
       );
-      toast.success('Product added to cart')
+      toast.success("Product added to cart");
     }
   };
 
@@ -58,24 +57,24 @@ export default function ProductPage() {
           <div className="w-full h-64 md:w-1/2 lg:h-96">
             <img
               className="h-full w-full rounded-md object-contain max-w-lg mx-auto"
-              src={product?.grid_picture_url}
+              src={product!.grid_picture_url}
               alt="Nike Air"
             />
           </div>
           <div className="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
             <h3 className="text-gray-700 uppercase font-bold text-lg">
-              {product?.name}
+              {product!.name}
             </h3>
             <span className="text-gray-500 font-light text-3xl mt-3">
-              ${product?.retail_price_cents / 100}
+              ${product!.retail_price_cents! / 100}
             </span>
-            <hr className={`${product?.story_html ? "my-3" : "hidden"}`} />
-            <p className="text-gray-600">{product?.story_html}</p>
+            <hr className={`${product!.story_html ? "my-3" : "hidden"}`} />
+            <p className="text-gray-600">{product!.story_html}</p>
             <hr className="my-3" />
             <div className="flex flex-col gap-4">
               <span className="text-gray-500 font-light text-2xl">SIZE</span>
               <ul className="flex gap-2 flex-wrap">
-                {product?.size_range?.map((size) => {
+                {product!.size_range.map((size) => {
                   return (
                     <li
                       key={size}

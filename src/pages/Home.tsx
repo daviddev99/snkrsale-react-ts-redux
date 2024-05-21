@@ -14,25 +14,22 @@ import new5 from "../assets/img/new5.png";
 export const Home = () => {
   const products = data.sneakers;
 
-  interface Product {
+  type Product = {
     brand_name: string;
     category: string[];
     designer: string;
     gender: string[];
     grid_picture_url: string;
     id: number;
-    keywords: string[];
     main_picture_url: string;
-    midsole: string;
     name: string;
-    nickname: string;
     original_picture_url: string;
     retail_price_cents: number;
     size_range: number[];
-    story_html?: string;
-    quantity?: number;
-    totalPrice?: number;
+    story_html: string;
     selectedSize?: number;
+    totalPrice?: number;
+    quantity?: number;
   }
 
   const tempProducts: Product[] = [];
@@ -46,6 +43,8 @@ export const Home = () => {
       tempProducts[i] = products[randomIndex];
     }
   }
+
+ 
   return (
     <>
       <section className="w-full bg-[#f2f2f2]">
@@ -103,7 +102,7 @@ export const Home = () => {
                       {product.name}
                     </p>
                     <p className="text-2xl font-bold">
-                      ${product.retail_price_cents / 100}
+                      ${product.retail_price_cents! / 100}
                     </p>
                     <Link
                       to={`/products/${product.id}`}

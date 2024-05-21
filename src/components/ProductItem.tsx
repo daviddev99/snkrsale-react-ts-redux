@@ -1,29 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
 type ProductItemProps = {
-    product: Product
-}
+  product: Product;
+};
 
 interface Product {
-    brand_name: string;
-    category: string[];
-    designer: string;
-    gender: string[];
-    grid_picture_url: string;
-    id: number;
-    keywords: string[];
-    main_picture_url: string;
-    midsole: string;
-    name: string;
-    nickname: string;
-    original_picture_url: string;
-    retail_price_cents: number;
-    size_range: number[];
-    story_html?: string;
-    quantity: number;
-    totalPrice: number;
-    selectedSize: number;
-  }
+  brand_name: string;
+  category: string[];
+  designer: string;
+  gender: string[];
+  grid_picture_url: string;
+  id: number;
+  main_picture_url: string;
+  name: string;
+  original_picture_url: string;
+  retail_price_cents: number;
+  size_range: number[];
+  story_html: string;
+  selectedSize?: number;
+  totalPrice?: number;
+  quantity?: number;
+}
 
 export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
   const price = product.retail_price_cents / 100;
@@ -73,4 +70,3 @@ export const ProductItem: React.FC<ProductItemProps> = ({ product }) => {
     </article>
   );
 };
-
