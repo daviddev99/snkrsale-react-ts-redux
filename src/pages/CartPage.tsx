@@ -15,23 +15,6 @@ import { toast } from "sonner";
 import { NoProducts } from "../components/NoProducts";
 
 export default function CartPage() {
-  type Product = {
-    brand_name: string;
-    category: string[];
-    designer: string;
-    gender: string[];
-    grid_picture_url: string;
-    id: number;
-    main_picture_url: string;
-    name: string;
-    original_picture_url: string;
-    retail_price_cents: number;
-    size_range: number[];
-    story_html: string;
-    selectedSize?: number;
-    totalPrice?: number;
-    quantity?: number;
-  }
   const dispatch = useDispatch();
   const { cartProducts, totalAmount, totalItems } = useSelector(cart);
   useEffect(() => {
@@ -47,7 +30,7 @@ export default function CartPage() {
             <div className="w-full flex flex-col h-fit gap-4 pt-4">
               <p className="text-blue-900 text-xl font-extrabold">My cart</p>
 
-              {cartProducts?.map((product: Product) => {
+              {cartProducts?.map((product) => {
                 return (
                   <div
                     className="flex flex-col p-4 text-lg font-semibold shadow-md border rounded-sm"

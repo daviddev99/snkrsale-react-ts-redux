@@ -129,5 +129,11 @@ export const {
   getTotal,
   increaseQuantity,
 } = cartSlice.actions;
-export const cart = (state) => state.cart;
+export const cart = (state: {
+  cart: {
+    cartProducts: Product[],
+  totalItems: 0,
+  totalAmount: 0
+  }
+}) => state.cart;
 export default cartSlice.reducer;
